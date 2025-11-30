@@ -20,4 +20,6 @@ public interface DocumentService {
 
     Document reclassifyDocument(Long id, Long categoryId);
 
+    void deleteDocument(Long id);
+
 }

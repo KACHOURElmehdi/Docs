@@ -40,6 +40,7 @@ public class DocumentController {
     }
 
     @GetMapping("/{id}")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<Document> getDocument(@PathVariable Long id) {
         return documentService.getDocument(id)
                 .map(ResponseEntity::ok)
@@ -74,6 +75,12 @@ public class DocumentController {
             @PathVariable Long id,
             @RequestParam Long category) {
         return ResponseEntity.ok(documentService.reclassifyDocument(id, category));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDocument(@PathVariable Long id) {
+        documentService.deleteDocument(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

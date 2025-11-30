@@ -86,4 +86,21 @@ public class DocumentServiceImpl implements DocumentService {
         document.setCategory(category);
         return documentRepository.save(document);
     }
+
+    @Override
+    public void deleteDocument(Long id) {
+        Document document = getDocument(id)
+                .orElseThrow(() -> new RuntimeException("Document not found"));
+
+        // Delete physical file
+        try {
+            storageService.delete(document.getFilename());
+        } catch (Exception e) {
+            // Log error but continue with database deletion
+            System.err.println("Failed to delete file: " + e.getMessage());
+        }
+
+        // Delete from database
+        documentRepository.deleteById(id);
+    }
 }

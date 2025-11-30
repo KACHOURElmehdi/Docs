@@ -30,6 +30,7 @@ public class PipelineServiceImpl implements PipelineService {
 
     @Async
     @Override
+    @org.springframework.transaction.annotation.Transactional
     public void processDocument(Long documentId) {
         Document document = documentRepository.findById(documentId)
                 .orElseThrow(() -> new RuntimeException("Document not found"));

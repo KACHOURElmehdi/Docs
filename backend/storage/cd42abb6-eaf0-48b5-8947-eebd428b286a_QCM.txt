@@ -1,0 +1,39 @@
+1. B – Aligner les actions IT sur la stratégie d’entreprise
+
+2. C – L’alignement stratégique et la création de valeur
+
+3. B – Le taux de disponibilité des services critiques
+
+4. C – Régulièrement selon l’évolution du contexte
+
+5. B – Un modèle d’architecture IT cible
+
+6. C – Prendre des décisions stratégiques sur les projets et priorités
+
+7. B – Un plan de déploiement dans le temps
+
+8. C – Moderniser, rationaliser et sécuriser le SI
+
+9. B – Assurer que l’IT crée de la valeur et gère les risques
+
+10. C – COBIT
+
+11. B – Gestion des services IT
+
+12. C – Un ensemble d’activités structurées
+
+13. A – Définir les responsabilités
+
+14. C – Spécifique, mesurable et pertinent
+
+15. C – Traduire les besoins business en solutions IT alignées
+
+16. B – L’amélioration du support IT
+
+17. B – Utiliser le contrôle de version (Git)
+
+18. B – Améliorer la qualité et réduire les erreurs
+
+19. B – Une meilleure scalabilité et flexibilité
+
+20. C – Automatiser et accélérer les livraisons
