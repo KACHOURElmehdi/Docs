@@ -20,4 +20,10 @@ public class Category {
 
     @Column(unique = true, nullable = false)
     private String name;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(length = 16)
+    private String color;
 }

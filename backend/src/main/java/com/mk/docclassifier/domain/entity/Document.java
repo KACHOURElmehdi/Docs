@@ -52,7 +52,6 @@ public class Document {
 
     private String errorMessage;
 
-    @com.fasterxml.jackson.annotation.JsonIgnore
     @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "document_tags", joinColumns = @JoinColumn(name = "document_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
