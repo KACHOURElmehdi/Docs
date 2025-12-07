@@ -115,4 +115,32 @@ public class DocumentController {
         }
     }
 
+    @PostMapping("/{id}/tags/{tagId}")
+    public ResponseEntity<Document> addTagToDocument(
+            @PathVariable Long id,
+            @PathVariable Long tagId,
+            @AuthenticationPrincipal User user) {
+        try {
+            return ResponseEntity.ok(documentService.addTagToDocument(id, tagId, user));
+        } catch (org.springframework.security.access.AccessDeniedException ex) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (RuntimeException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}/tags/{tagId}")
+    public ResponseEntity<Document> removeTagFromDocument(
+            @PathVariable Long id,
+            @PathVariable Long tagId,
+            @AuthenticationPrincipal User user) {
+        try {
+            return ResponseEntity.ok(documentService.removeTagFromDocument(id, tagId, user));
+        } catch (org.springframework.security.access.AccessDeniedException ex) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (RuntimeException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
