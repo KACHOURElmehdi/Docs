@@ -31,7 +31,10 @@ public class TagService {
 
     @Transactional
     public TagResponse createTag(TagRequest request, User user) {
-        ensureAdmin(user);
+        // Allow all authenticated users to create tags
+        if (user == null) {
+            throw new AccessDeniedException("Authentication required to create tags");
+        }
 
         if (tagRepository.existsByNameIgnoreCase(request.getName())) {
             throw new IllegalArgumentException("Tag name already exists");
@@ -40,6 +43,7 @@ public class TagService {
         Tag tag = Tag.builder()
                 .name(request.getName().trim())
                 .color(valueOrNull(request.getColor()))
+                .createdBy(user)
                 .build();
 
         Tag saved = tagRepository.save(tag);
@@ -87,6 +91,10 @@ public class TagService {
                 .name(tag.getName())
                 .color(tag.getColor())
                 .documentCount(docCount)
+                .createdByUsername(tag.getCreatedBy() != null ? tag.getCreatedBy().getUsername() : null)
+                .createdByUserId(tag.getCreatedBy() != null ? tag.getCreatedBy().getId() : null)
+                .createdAt(tag.getCreatedAt())
+                .updatedAt(tag.getUpdatedAt())
                 .build();
     }
 

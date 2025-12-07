@@ -31,7 +31,10 @@ public class CategoryService {
 
     @Transactional
     public CategoryResponse createCategory(CategoryRequest request, User user) {
-        ensureAdmin(user);
+        // Allow all authenticated users to create categories
+        if (user == null) {
+            throw new AccessDeniedException("Authentication required to create categories");
+        }
 
         if (categoryRepository.existsByNameIgnoreCase(request.getName())) {
             throw new IllegalArgumentException("Category name already exists");
@@ -41,6 +44,7 @@ public class CategoryService {
                 .name(request.getName().trim())
                 .description(valueOrNull(request.getDescription()))
                 .color(valueOrNull(request.getColor()))
+                .createdBy(user)
                 .build();
 
         Category saved = categoryRepository.save(category);
@@ -92,6 +96,10 @@ public class CategoryService {
                 .description(category.getDescription())
                 .color(category.getColor())
                 .documentCount(docCount)
+                .createdByUsername(category.getCreatedBy() != null ? category.getCreatedBy().getUsername() : null)
+                .createdByUserId(category.getCreatedBy() != null ? category.getCreatedBy().getId() : null)
+                .createdAt(category.getCreatedAt())
+                .updatedAt(category.getUpdatedAt())
                 .build();
     }
 
