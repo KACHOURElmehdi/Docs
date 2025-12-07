@@ -21,8 +21,12 @@ public interface DocumentService {
         org.springframework.data.domain.Page<Document> searchDocuments(String query, String category, String status,
             User user, org.springframework.data.domain.Pageable pageable);
 
-        Document reclassifyDocument(Long id, Long categoryId, User user);
+    Document reclassifyDocument(Long id, Long categoryId, User user);
 
-        void deleteDocument(Long id, User user);
+    void deleteDocument(Long id, User user);
+
+    Document addTagToDocument(Long documentId, Long tagId, User user);
+
+    Document removeTagFromDocument(Long documentId, Long tagId, User user);
 
 }

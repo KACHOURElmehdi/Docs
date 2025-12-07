@@ -3,8 +3,10 @@ package com.mk.docclassifier.service.impl;
 import com.mk.docclassifier.domain.entity.Document;
 import com.mk.docclassifier.domain.entity.DocumentStatus;
 import com.mk.docclassifier.domain.entity.Role;
+import com.mk.docclassifier.domain.entity.Tag;
 import com.mk.docclassifier.domain.entity.User;
 import com.mk.docclassifier.repository.DocumentRepository;
+import com.mk.docclassifier.repository.TagRepository;
 import com.mk.docclassifier.repository.UserRepository;
 import com.mk.docclassifier.service.DocumentService;
 import com.mk.docclassifier.service.PipelineService;
@@ -27,6 +29,7 @@ public class DocumentServiceImpl implements DocumentService {
     private final UserRepository userRepository;
     private final PipelineService pipelineService;
     private final com.mk.docclassifier.repository.CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
 
     @Override
     public Document uploadDocument(MultipartFile file, Long userId) throws IOException {
@@ -127,6 +130,32 @@ public class DocumentServiceImpl implements DocumentService {
 
         // Delete from database
         documentRepository.deleteById(id);
+    }
+
+    @Override
+    @org.springframework.transaction.annotation.Transactional
+    public Document addTagToDocument(Long documentId, Long tagId, User user) {
+        Document document = getDocumentForUser(documentId, user);
+        Tag tag = tagRepository.findById(tagId)
+                .orElseThrow(() -> new RuntimeException("Tag not found"));
+
+        if (!document.getTags().contains(tag)) {
+            document.getTags().add(tag);
+            document = documentRepository.save(document);
+        }
+
+        return document;
+    }
+
+    @Override
+    @org.springframework.transaction.annotation.Transactional
+    public Document removeTagFromDocument(Long documentId, Long tagId, User user) {
+        Document document = getDocumentForUser(documentId, user);
+        Tag tag = tagRepository.findById(tagId)
+                .orElseThrow(() -> new RuntimeException("Tag not found"));
+
+        document.getTags().remove(tag);
+        return documentRepository.save(document);
     }
 
     private boolean isAdmin(User user) {
