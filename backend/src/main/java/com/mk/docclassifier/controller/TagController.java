@@ -22,8 +22,8 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping
-    public ResponseEntity<List<TagResponse>> getAllTags() {
-        return ResponseEntity.ok(tagService.getAllTags());
+    public ResponseEntity<List<TagResponse>> getAllTags(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(tagService.getAllTags(user));
     }
 
     @PostMapping
