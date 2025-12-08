@@ -21,8 +21,12 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> getAllCategories(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(categoryService.getAllCategories(user));
+    public ResponseEntity<?> getAllCategories(@AuthenticationPrincipal User user) {
+        try {
+            return ResponseEntity.ok(categoryService.getAllCategories(user));
+        } catch (org.springframework.security.access.AccessDeniedException ex) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.FORBIDDEN).body(ex.getMessage());
+        }
     }
 
     @PostMapping

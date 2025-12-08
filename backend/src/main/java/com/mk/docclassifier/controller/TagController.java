@@ -22,8 +22,12 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping
-    public ResponseEntity<List<TagResponse>> getAllTags(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(tagService.getAllTags(user));
+    public ResponseEntity<?> getAllTags(@AuthenticationPrincipal User user) {
+        try {
+            return ResponseEntity.ok(tagService.getAllTags(user));
+        } catch (AccessDeniedException ex) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+        }
     }
 
     @PostMapping
