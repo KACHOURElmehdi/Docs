@@ -24,6 +24,7 @@ public class TagService {
 
     @Transactional(readOnly = true)
     public List<TagResponse> getAllTags(User user) {
+        ensureAdmin(user);
         return tagRepository.findAll().stream()
                 .map(tag -> toResponse(tag, user))
                 .collect(Collectors.toList());

@@ -24,6 +24,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public List<CategoryResponse> getAllCategories(User user) {
+        ensureAdmin(user);
         return categoryRepository.findAll().stream()
                 .map(category -> toResponse(category, user))
                 .collect(Collectors.toList());
