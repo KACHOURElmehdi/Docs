@@ -23,9 +23,9 @@ public class TagService {
     private final DocumentRepository documentRepository;
 
     @Transactional(readOnly = true)
-    public List<TagResponse> getAllTags() {
+    public List<TagResponse> getAllTags(User user) {
         return tagRepository.findAll().stream()
-                .map(this::toResponse)
+                .map(tag -> toResponse(tag, user))
                 .collect(Collectors.toList());
     }
 
@@ -47,7 +47,7 @@ public class TagService {
                 .build();
 
         Tag saved = tagRepository.save(tag);
-        return toResponse(saved);
+        return toResponse(saved, user);
     }
 
     @Transactional
@@ -66,7 +66,7 @@ public class TagService {
         tag.setColor(valueOrNull(request.getColor()));
 
         Tag saved = tagRepository.save(tag);
-        return toResponse(saved);
+        return toResponse(saved, user);
     }
 
     @Transactional
@@ -84,8 +84,16 @@ public class TagService {
         tagRepository.delete(tag);
     }
 
-    private TagResponse toResponse(Tag tag) {
-        long docCount = tag.getId() == null ? 0 : documentRepository.countByTagsContaining(tag);
+    private TagResponse toResponse(Tag tag, User user) {
+        long docCount = 0;
+        if (tag.getId() != null && user != null) {
+            // For regular users, count only their documents; for admins, count all
+            if (user.getRole() == Role.ADMIN) {
+                docCount = documentRepository.countByTagsContaining(tag);
+            } else {
+                docCount = documentRepository.countByTagsContainingAndUserId(tag, user.getId());
+            }
+        }
         return TagResponse.builder()
                 .id(tag.getId())
                 .name(tag.getName())

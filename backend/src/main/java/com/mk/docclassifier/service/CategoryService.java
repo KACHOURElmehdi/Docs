@@ -23,9 +23,9 @@ public class CategoryService {
     private final DocumentRepository documentRepository;
 
     @Transactional(readOnly = true)
-    public List<CategoryResponse> getAllCategories() {
+    public List<CategoryResponse> getAllCategories(User user) {
         return categoryRepository.findAll().stream()
-                .map(this::toResponse)
+                .map(category -> toResponse(category, user))
                 .collect(Collectors.toList());
     }
 
@@ -48,7 +48,7 @@ public class CategoryService {
                 .build();
 
         Category saved = categoryRepository.save(category);
-        return toResponse(saved);
+        return toResponse(saved, user);
     }
 
     @Transactional
@@ -68,7 +68,7 @@ public class CategoryService {
         category.setColor(valueOrNull(request.getColor()));
 
         Category saved = categoryRepository.save(category);
-        return toResponse(saved);
+        return toResponse(saved, user);
     }
 
     @Transactional
@@ -88,8 +88,16 @@ public class CategoryService {
         categoryRepository.delete(category);
     }
 
-    private CategoryResponse toResponse(Category category) {
-        long docCount = category.getId() == null ? 0 : documentRepository.countByCategoryId(category.getId());
+    private CategoryResponse toResponse(Category category, User user) {
+        long docCount = 0;
+        if (category.getId() != null && user != null) {
+            // For regular users, count only their documents; for admins, count all
+            if (user.getRole() == Role.ADMIN) {
+                docCount = documentRepository.countByCategoryId(category.getId());
+            } else {
+                docCount = documentRepository.countByCategoryIdAndUserId(category.getId(), user.getId());
+            }
+        }
         return CategoryResponse.builder()
                 .id(category.getId())
                 .name(category.getName())
