@@ -24,6 +24,10 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
 
         long countByTagsContaining(Tag tag);
 
+        long countByCategoryIdAndUserId(Long categoryId, Long userId);
+
+        long countByTagsContainingAndUserId(Tag tag, Long userId);
+
         long countByStatus(DocumentStatus status);
 
         @Query("SELECT d FROM Document d LEFT JOIN d.category c WHERE "
