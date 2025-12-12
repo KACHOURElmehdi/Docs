@@ -1,0 +1,70 @@
+services:
+  # MySQL Database
+  - type: pserv
+    name: docclassifier-db
+    env: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile.mysql
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+      - key: MYSQL_DATABASE
+        value: docdb
+
+  # RabbitMQ Service
+  - type: pserv
+    name: docclassifier-rabbitmq
+    env: docker
+    plan: starter
+    dockerCommand: rabbitmq:3.12-management-alpine
+    envVars:
+      - key: RABBITMQ_DEFAULT_USER
+        value: admin
+      - key: RABBITMQ_DEFAULT_PASS
+        generateValue: true
+
+  # Backend Service
+  - type: web
+    name: docclassifier-backend
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: starter
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DATABASE_URL
+        fromService:
+          type: pserv
+          name: docclassifier-db
+          property: connectionString
+      - key: DB_USERNAME
+        value: root
+      - key: DB_PASSWORD
+        fromService:
+          type: pserv
+          name: docclassifier-db
+          envVarKey: MYSQL_ROOT_PASSWORD
+      - key: JWT_SECRET
+        generateValue: true
+      - key: RABBITMQ_HOST
+        fromService:
+          type: pserv
+          name: docclassifier-rabbitmq
+          property: host
+      - key: RABBITMQ_PORT
+        value: 5672
+      - key: RABBITMQ_USERNAME
+        value: admin
+      - key: RABBITMQ_PASSWORD
+        fromService:
+          type: pserv
+          name: docclassifier-rabbitmq
+          envVarKey: RABBITMQ_DEFAULT_PASS
+      - key: DDL_AUTO
+        value: update
+      - key: SHOW_SQL
+        value: false
+      - key: ALLOWED_ORIGINS
+        value: http://localhost:3000,https://your-frontend-url.onrender.com

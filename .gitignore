@@ -1,0 +1,20 @@
+# Environment files - NEVER commit these!
+.env
+.env.local
+.env.production
+.env.render
+*.env
+!.env.example
+!.env.render.template
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log

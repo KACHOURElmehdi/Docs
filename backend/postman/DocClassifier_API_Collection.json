@@ -1,0 +1,721 @@
+{
+	"info": {
+		"_postman_id": "docclassifier-api-collection",
+		"name": "DocClassifier API",
+		"description": "Complete API collection for DocClassifier Backend - Document Classification System\n\n## Authentication\nThis API uses JWT Bearer tokens. Use the Login or Register endpoints first to get a token, which will be automatically saved to the collection variable `jwt_token`.\n\n## Base URL\nProduction: https://docclassifier-backend-latest.onrender.com",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://docclassifier-backend-latest.onrender.com",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{jwt_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"description": "User authentication endpoints - Register and Login",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.token) {",
+									"        pm.collectionVariables.set('jwt_token', jsonData.token);",
+									"        console.log('JWT Token saved to collection variable');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"SecurePassword123!\",\n    \"role\": \"USER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						},
+						"description": "Register a new user account.\n\n**Roles available:**\n- `USER` - Standard user\n- `ADMIN` - Administrator with full access\n\n**Note:** The JWT token is automatically saved to the collection variable `jwt_token` upon successful registration."
+					},
+					"response": []
+				},
+				{
+					"name": "Register Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.token) {",
+									"        pm.collectionVariables.set('jwt_token', jsonData.token);",
+									"        console.log('JWT Token saved to collection variable');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Admin User\",\n    \"email\": \"admin@example.com\",\n    \"password\": \"AdminPassword123!\",\n    \"role\": \"ADMIN\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						},
+						"description": "Register a new admin account.\n\n**Note:** The JWT token is automatically saved to the collection variable `jwt_token` upon successful registration."
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.token) {",
+									"        pm.collectionVariables.set('jwt_token', jsonData.token);",
+									"        console.log('JWT Token saved to collection variable');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"SecurePassword123!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						},
+						"description": "Authenticate with email and password to receive a JWT token.\n\n**Note:** The JWT token is automatically saved to the collection variable `jwt_token` upon successful login."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Documents",
+			"description": "Document management endpoints - Upload, retrieve, search, and manage documents",
+			"item": [
+				{
+					"name": "Upload Document",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "",
+									"description": "Select a file to upload (PDF, DOCX, TXT, etc.)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/documents/upload",
+							"host": ["{{base_url}}"],
+							"path": ["api", "documents", "upload"]
+						},
+						"description": "Upload a document for classification.\n\n**Supported file types:** PDF, DOCX, TXT, and other common document formats.\n\n**Note:** Select a file in the Body > form-data section."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Documents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/documents",
+							"host": ["{{base_url}}"],
+							"path": ["api", "documents"]
+						},
+						"description": "Retrieve all documents for the authenticated user.\n\n**Admin users** see all documents in the system.\n**Regular users** see only their own documents."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Document by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/documents/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "documents", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Document ID"
+								}
+							]
+						},
+						"description": "Retrieve a specific document by its ID.\n\n**Access:** Users can only access their own documents. Admins can access all documents."
+					},
+					"response": []
+				},
+				{
+					"name": "Download Document File",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/documents/:id/file",
+							"host": ["{{base_url}}"],
+							"path": ["api", "documents", ":id", "file"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Document ID"
+								}
+							]
+						},
+						"description": "Download the original file of a document.\n\n**Response:** Binary file with appropriate Content-Type header."
+					},
+					"response": []
+				},
+				{
+					"name": "Search Documents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/documents/search?q=&category=&status=&page=0&size=10&sort=createdAt,desc",
+							"host": ["{{base_url}}"],
+							"path": ["api", "documents", "search"],
+							"query": [
+								{
+									"key": "q",
+									"value": "",
+									"description": "Search query (searches in filename, content)"
+								},
+								{
+									"key": "category",
+									"value": "",
+									"description": "Filter by category name"
+								},
+								{
+									"key": "status",
+									"value": "",
+									"description": "Filter by status (PENDING, PROCESSING, PROCESSED, ERROR)"
+								},
+								{
+									"key": "page",
+									"value": "0",
+									"description": "Page number (0-indexed)"
+								},
+								{
+									"key": "size",
+									"value": "10",
+									"description": "Number of items per page"
+								},
+								{
+									"key": "sort",
+									"value": "createdAt,desc",
+									"description": "Sort field and direction (e.g., createdAt,desc)"
+								}
+							]
+						},
+						"description": "Search and filter documents with pagination.\n\n**Query Parameters:**\n- `q` - Text search query\n- `category` - Filter by category name\n- `status` - Filter by document status (PENDING, PROCESSING, PROCESSED, ERROR)\n- `page` - Page number (0-indexed)\n- `size` - Items per page\n- `sort` - Sort field and direction"
+					},
+					"response": []
+				},
+				{
+					"name": "Reclassify Document",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"categoryId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/documents/:id/reclassify",
+							"host": ["{{base_url}}"],
+							"path": ["api", "documents", ":id", "reclassify"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Document ID"
+								}
+							]
+						},
+						"description": "Manually reclassify a document to a different category.\n\n**Body:**\n- `categoryId` - The ID of the new category"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Document",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/documents/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "documents", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Document ID"
+								}
+							]
+						},
+						"description": "Delete a document.\n\n**Access:** Users can only delete their own documents. Admins can delete any document."
+					},
+					"response": []
+				},
+				{
+					"name": "Add Tag to Document",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/documents/:id/tags/:tagId",
+							"host": ["{{base_url}}"],
+							"path": ["api", "documents", ":id", "tags", ":tagId"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Document ID"
+								},
+								{
+									"key": "tagId",
+									"value": "1",
+									"description": "Tag ID to add"
+								}
+							]
+						},
+						"description": "Add a tag to a document."
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Tag from Document",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/documents/:id/tags/:tagId",
+							"host": ["{{base_url}}"],
+							"path": ["api", "documents", ":id", "tags", ":tagId"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Document ID"
+								},
+								{
+									"key": "tagId",
+									"value": "1",
+									"description": "Tag ID to remove"
+								}
+							]
+						},
+						"description": "Remove a tag from a document."
+					},
+					"response": []
+				},
+				{
+					"name": "Subscribe to Document Events (SSE)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "text/event-stream"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/documents/:id/events?token={{jwt_token}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "documents", ":id", "events"],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"description": "JWT token for authentication (passed as query param for SSE)"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Document ID"
+								}
+							]
+						},
+						"description": "Subscribe to Server-Sent Events (SSE) for real-time document processing updates.\n\n**Note:** Authentication is passed via query parameter `token` since SSE doesn't support headers in browsers.\n\n**Event types:**\n- Processing status updates\n- Classification results\n- Error notifications"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"description": "Category management endpoints - CRUD operations for document categories",
+			"item": [
+				{
+					"name": "Get All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/categories",
+							"host": ["{{base_url}}"],
+							"path": ["api", "categories"]
+						},
+						"description": "Retrieve all available categories."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Invoices\",\n    \"description\": \"Financial invoices and billing documents\",\n    \"color\": \"#3B82F6\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/categories",
+							"host": ["{{base_url}}"],
+							"path": ["api", "categories"]
+						},
+						"description": "Create a new category.\n\n**Required fields:**\n- `name` - Category name (max 255 chars)\n\n**Optional fields:**\n- `description` - Category description (max 2048 chars)\n- `color` - Hex color code (max 16 chars)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Category Name\",\n    \"description\": \"Updated description\",\n    \"color\": \"#10B981\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/categories/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "categories", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Category ID"
+								}
+							]
+						},
+						"description": "Update an existing category."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/categories/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "categories", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Category ID"
+								}
+							]
+						},
+						"description": "Delete a category.\n\n**Note:** This may affect documents assigned to this category."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tags",
+			"description": "Tag management endpoints - CRUD operations for document tags",
+			"item": [
+				{
+					"name": "Get All Tags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tags",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tags"]
+						},
+						"description": "Retrieve all available tags."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Tag",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Urgent\",\n    \"color\": \"#EF4444\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tags",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tags"]
+						},
+						"description": "Create a new tag.\n\n**Required fields:**\n- `name` - Tag name (max 100 chars)\n\n**Optional fields:**\n- `color` - Hex color code (max 16 chars)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Tag",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Tag Name\",\n    \"color\": \"#8B5CF6\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tags/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tags", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Tag ID"
+								}
+							]
+						},
+						"description": "Update an existing tag."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tag",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tags/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tags", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Tag ID"
+								}
+							]
+						},
+						"description": "Delete a tag.\n\n**Note:** This will remove the tag from all associated documents."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Statistics",
+			"description": "Dashboard statistics endpoints",
+			"item": [
+				{
+					"name": "Get Overview Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/stats/overview",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stats", "overview"]
+						},
+						"description": "Get overview statistics for the dashboard.\n\n**Response includes:**\n- `totalDocuments` - Total number of documents\n- `processedDocuments` - Number of processed documents\n- `errorDocuments` - Number of documents with errors\n- `totalCategories` - Number of categories\n- `totalTags` - Number of tags\n- `averageConfidence` - Average classification confidence score\n\n**Note:** Admin users see global stats, regular users see only their own stats."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/stats/categories",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stats", "categories"]
+						},
+						"description": "Get document count per category for charts.\n\n**Response:** Array of objects with `name` and `count` fields.\n\n**Note:** Admin users see global stats, regular users see only their own stats."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"description": "Administrative endpoints (Admin role required)",
+			"item": [
+				{
+					"name": "Seed Database",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/admin/seed-data",
+							"host": ["{{base_url}}"],
+							"path": ["api", "admin", "seed-data"]
+						},
+						"description": "Seed the database with default categories and tags.\n\n**Note:** This endpoint is typically used for initial setup or testing.\n\n**Access:** Admin role required."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
