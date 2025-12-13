@@ -34,6 +34,12 @@ public class SecurityConfig {
                                                 .requestMatchers("/api/auth/**").permitAll()
                                                 .requestMatchers("/h2-console/**").permitAll()
                                                 .requestMatchers("/uploads/**").permitAll()
+                                                // Swagger UI endpoints
+                                                .requestMatchers("/swagger-ui/**").permitAll()
+                                                .requestMatchers("/swagger-ui.html").permitAll()
+                                                .requestMatchers("/v3/api-docs/**").permitAll()
+                                                .requestMatchers("/swagger-resources/**").permitAll()
+                                                .requestMatchers("/webjars/**").permitAll()
                                                 .anyRequest().authenticated())
                                 .exceptionHandling(
                                                 e -> e.authenticationEntryPoint((request, response, authException) -> {
@@ -54,13 +60,10 @@ public class SecurityConfig {
         @Bean
         public CorsConfigurationSource corsConfigurationSource() {
                 CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(List.of(
-                        "http://localhost:3000",
-                        "http://127.0.0.1:3000",
-                        "https://frontend-s87o.vercel.app"
-                ));
-                configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                configuration.setAllowedOriginPatterns(List.of("*"));
+                configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                 configuration.setAllowedHeaders(List.of("*"));
+                configuration.setExposedHeaders(List.of("*"));
                 configuration.setAllowCredentials(true);
                 UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                 source.registerCorsConfiguration("/**", configuration);
